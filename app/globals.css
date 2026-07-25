@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens
+ * ------------
+ * Base color values live here as "R G B" triples so Tailwind's opacity
+ * modifiers (bg-panel/60, border-scan/30, etc.) keep working while the
+ * underlying color flips between light and dark. Dark is the default
+ * aesthetic (exact original values); :root defines the light-mode
+ * replacements, applied whenever next-themes removes the "dark" class.
+ */
+:root {
+  color-scheme: light;
+
+  --color-void: 243 245 247; /* app background */
+  --color-panel: 255 255 255; /* card surfaces */
+  --color-panel-raised: 241 244 247; /* recessed / inset surfaces */
+  --color-panel-hover: 236 240 243; /* hover state */
+  --color-line: 224 229 234; /* hairline borders */
+  --color-line-bright: 202 210 218; /* emphasized borders */
+  --color-primary: 26 32 40; /* body text */
+  --color-muted: 91 102 114; /* secondary text */
+  --color-faint: 148 160 172; /* tertiary text */
+
+  /* Always-dark scrim for overlays drawn on top of photos, regardless
+     of theme, so overlay text/icons stay legible against any image. */
+  --color-scrim: 5 7 10;
+
+  --grid-line: rgba(15, 23, 42, 0.035);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-void: 5 7 10;
+  --color-panel: 13 17 23;
+  --color-panel-raised: 19 27 38;
+  --color-panel-hover: 24 33 48;
+  --color-line: 30 39 51;
+  --color-line-bright: 42 54 68;
+  --color-primary: 231 236 242;
+  --color-muted: 124 138 155;
+  --color-faint: 75 88 103;
+
+  --color-scrim: 5 7 10;
+
+  --grid-line: rgba(76, 243, 255, 0.045);
+}
+
+body {
+  background-color: rgb(var(--color-void));
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-attachment: fixed;
+}
+
+/* Smooth, app-wide light/dark crossfade. Elements that already declare
+   their own transition (e.g. Tailwind's transition-colors utility) take
+   precedence over this default via normal CSS specificity. */
+body,
+body * {
+  transition: background-color 0.25s ease, border-color 0.25s ease,
+    color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Light mode reads as "white cards with soft shadows" per the brief,
+   rather than the dark mode's border-only panels. */
+:root:not(.dark) [class*="bg-panel"] {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+::selection {
+  background-color: rgba(76, 243, 255, 0.25);
+  color: rgb(var(--color-primary));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-void));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-line));
+  border-radius: 999px;
+  border: 2px solid rgb(var(--color-void));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-line-bright));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.text-numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Neon range slider used by the AI tuning panel */
+.slider-neon {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #4cf3ff var(--slider-fill, 50%),
+    rgb(var(--color-line)) var(--slider-fill, 50%)
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-neon::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: rgb(var(--color-panel));
+  border: 2px solid #4cf3ff;
+  box-shadow: 0 0 10px rgba(76, 243, 255, 0.65);
+  transition: transform 0.15s ease;
+}
+
+.slider-neon::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.slider-neon::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: rgb(var(--color-panel));
+  border: 2px solid #4cf3ff;
+  box-shadow: 0 0 10px rgba(76, 243, 255, 0.65);
+  transition: transform 0.15s ease;
+}
+
+.slider-neon::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+.slider-neon::-moz-range-progress {
+  background: #4cf3ff;
+  height: 4px;
+  border-radius: 999px;
+}
